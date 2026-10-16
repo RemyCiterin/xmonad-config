@@ -14,6 +14,7 @@ import XMonad.Util.Loggers
 import XMonad.Layout.Magnifier
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.ToggleLayouts
+import XMonad.Layout.Spacing
 
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Actions.NoBorders
@@ -23,6 +24,7 @@ import qualified Data.Map as M
 
 main :: IO ()
 main = do
+  spawn "picom"
   spawn "xset r rate 200 40"
   xmonad
      . ewmhFullscreen
@@ -43,7 +45,7 @@ myConfig = def
   [ "M-h", "M-j", "M-k", "M-l" ]
   `additionalKeysP`
   [ ("M-S-f", spawn "firefox")
-  , ("M-S-t", spawn "ghostty")
+  , ("M-S-t", spawn "alacritty")
   , ("M-<Up>", windows W.focusUp)
   , ("M-<Down>", windows W.focusDown)
   , ("M-S-<Up>", windows W.swapUp)
@@ -76,13 +78,21 @@ myManageHook = composeAll
     , isDialog            --> doFloat
     ]
 
-myLayout = tiled ||| Mirror tiled ||| Full ||| threeCol
+myLayout = mySpacing $ tiled ||| Mirror tiled ||| Full ||| threeCol
   where
     threeCol = magnifiercz' 1.3 $ ThreeColMid nmaster delta ratio
     tiled    = Tall nmaster delta ratio
     nmaster  = 1      -- Default number of windows in the master pane
     ratio    = 1/2    -- Default proportion of screen occupied by master pane
     delta    = 3/100  -- Percent of screen to increment by when resizing panes
+
+mySpacing =
+  spacingRaw
+    True              -- False=apply envn when single window
+    (Border 3 3 3 3)  -- Screen borders for top bot right left
+    True              -- enable screen borders
+    (Border 3 3 3 3)  -- window border size
+    True              -- enable window borders
 
 myXmobarPP :: PP
 myXmobarPP = def
