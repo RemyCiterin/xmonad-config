@@ -25,6 +25,7 @@ import qualified Data.Map as M
 main :: IO ()
 main = do
   spawn "picom"
+  -- spawn "feh --bg-fill ~/.xmonad/pentium4.jpg"
   spawn "xset r rate 200 40"
   xmonad
      . ewmhFullscreen
@@ -42,10 +43,11 @@ myConfig = def
   , manageHook = myManageHook  -- Match on certain windows
   }
   `removeKeysP`
-  [ "M-h", "M-j", "M-k", "M-l" ]
+  [ "M-h", "M-j", "M-k", "M-l", "M-S-c" ]
   `additionalKeysP`
   [ ("M-S-f", spawn "firefox")
   , ("M-S-t", spawn "alacritty")
+  , ("M-<F4>", kill)
   , ("M-<Up>", windows W.focusUp)
   , ("M-<Down>", windows W.focusDown)
   , ("M-S-<Up>", windows W.swapUp)
